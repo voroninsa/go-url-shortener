@@ -11,6 +11,10 @@ func main() {
 	storage := storage.NewStorage("SQL")
 	// storage.PutUrl("Yutube.com", "weugnk")
 
-	fmt.Println(storage.GetUrl("ddfassdetu"))
+	if err := storage.PutUrl("dsafdsgfdh", "vk.com"); err != nil {
+		fmt.Println("ERROR: ", err)
+	}
+
+	// fmt.Println(storage.GetUrl("ddfassdetu"))
 
 }

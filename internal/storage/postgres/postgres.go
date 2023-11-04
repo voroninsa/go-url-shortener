@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 
 	_ "github.com/lib/pq"
@@ -17,17 +18,21 @@ func (s *SQLStorage) GetUrl(shortUrl string) (string, error) {
 
 	if err := s.StorageURL.QueryRow(`SELECT url FROM urls WHERE short_url = $1`, shortUrl).Scan(&url); err != nil {
 		if err == sql.ErrNoRows {
-			return "", fmt.Errorf("No such record: ", shortUrl)
+			return "", errors.New(fmt.Sprint("No such record: ", shortUrl))
 		}
-		return "", fmt.Errorf("Error DataBase: ", err)
+		return "", errors.New(fmt.Sprint("Error DataBase: ", err))
 	}
 
 	return url, nil
 }
 
-func (s *SQLStorage) PutUrl(url string, short_url string) bool {
-	// s.StorageMap[short_url] = url
-	return true
+func (s *SQLStorage) PutUrl(shortUrl string, url string) error {
+	_, err := s.StorageURL.Exec(`INSERT INTO urls (short_url, url) VALUES ($1, $2)`, shortUrl, url)
+	if err != nil {
+		return errors.New(fmt.Sprint("Adding data error: ", err))
+	}
+
+	return nil
 }
 
 func NewSqlStorage() base.IStorage {
