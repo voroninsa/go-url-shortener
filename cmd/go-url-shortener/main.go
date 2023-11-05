@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"net/http"
 
@@ -10,12 +9,12 @@ import (
 )
 
 func main() {
-	var storgageType string
-	flag.StringVar(&storgageType, "s", "InMemory", "Storage type to use ('SQL' | 'InMemory')")
-
-	fmt.Println(storgageType)
+	if err := common.InitConfig(); err != nil {
+		fmt.Println(err)
+		return
+	}
 	// common.InitConfig(storgageType)
-	common.InitConfig("InMemory")
+	// common.InitConfig(*storgageType)
 	// if err := storage.PutUrl(common.EncodeString("vk.com"), "vk.com"); err != nil {
 	// 	panic(err)
 	// }

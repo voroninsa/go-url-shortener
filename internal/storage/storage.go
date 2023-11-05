@@ -8,9 +8,9 @@ import (
 
 func NewStorage(storageType string) base.IStorage {
 	switch storageType {
-	case "SQL":
+	case "sql":
 		return postgres.NewSqlStorage()
-	case "InMemory":
+	case "inmemory":
 		return inmemory.NewInMemoryStorage()
 	}
 	return nil
