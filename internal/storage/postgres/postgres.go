@@ -27,7 +27,13 @@ func (s *SQLStorage) GetUrl(shortUrl string) (string, error) {
 }
 
 func (s *SQLStorage) PutUrl(shortUrl string, url string) error {
-	_, err := s.StorageURL.Exec(`INSERT INTO urls (short_url, url) VALUES ($1, $2)`, shortUrl, url)
+	db_url, err := s.GetUrl(shortUrl)
+	// Check if record exists. Don't check errors in Get
+	if db_url != "" {
+		return nil
+	}
+
+	_, err = s.StorageURL.Exec(`INSERT INTO urls (short_url, url) VALUES ($1, $2)`, shortUrl, url)
 	if err != nil {
 		return errors.New(fmt.Sprint("Adding data error: ", err))
 	}
