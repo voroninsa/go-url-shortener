@@ -6,12 +6,19 @@ import (
 	"github.com/voroninsa/go-url-shortener/internal/storage/postgres"
 )
 
+var AppStorage base.IStorage
+
 func NewStorage(storageType string) base.IStorage {
+	if AppStorage != nil {
+		return AppStorage
+	}
 	switch storageType {
 	case "sql":
-		return postgres.NewSqlStorage()
-	case "inmemory":
-		return inmemory.NewInMemoryStorage()
+		AppStorage = postgres.NewSqlStorage()
+		return AppStorage
+	case "imnemory":
+		AppStorage = inmemory.NewInMemoryStorage()
+		return AppStorage
 	}
 	return nil
 }

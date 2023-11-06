@@ -1,18 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
 
+	"github.com/voroninsa/go-url-shortener/configs"
 	"github.com/voroninsa/go-url-shortener/internal/api"
-	"github.com/voroninsa/go-url-shortener/internal/common"
 )
 
 func main() {
-	if err := common.InitConfig(); err != nil {
-		fmt.Println(err)
-		return
-	}
+	configs.InitConfig()
+	// if err := configs.InitConfig(); err != nil {
+	// 	log.Fatal(err)
+	// }
 	// common.InitConfig(storgageType)
 	// common.InitConfig(*storgageType)
 	// if err := storage.PutUrl(common.EncodeString("vk.com"), "vk.com"); err != nil {
@@ -24,5 +24,8 @@ func main() {
 	// server.Router.GET("/:shortenUrl", getHandler)
 	// router.POST("/shorten-url", postHandler)
 
-	http.ListenAndServe(":8080", server)
+	err := http.ListenAndServe(":8080", server)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

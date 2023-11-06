@@ -27,13 +27,13 @@ func (s *SQLStorage) GetUrl(shortUrl string) (string, error) {
 }
 
 func (s *SQLStorage) PutUrl(shortUrl string, url string) error {
-	db_url, err := s.GetUrl(shortUrl)
+	db_url, _ := s.GetUrl(shortUrl)
 	// Check if record exists. Don't check errors in Get
 	if db_url != "" {
 		return nil
 	}
 
-	_, err = s.StorageURL.Exec(`INSERT INTO urls (short_url, url) VALUES ($1, $2)`, shortUrl, url)
+	_, err := s.StorageURL.Exec(`INSERT INTO urls (short_url, url) VALUES ($1, $2)`, shortUrl, url)
 	if err != nil {
 		return errors.New(fmt.Sprint("Adding data error: ", err))
 	}
@@ -43,8 +43,11 @@ func (s *SQLStorage) PutUrl(shortUrl string, url string) error {
 
 func NewSqlStorage() base.IStorage {
 	// psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
-	psqlconn := "host=localhost port=5432 user=root password=qwerty dbname=short_urls sslmode=disable"
-	db, _ := sql.Open("postgres", psqlconn)
+	psqlconn := "host=postgres_container port=5432 user=root password=qwerty dbname=short_urls sslmode=disable"
+	db, err := sql.Open("postgres", psqlconn)
+	if err != nil {
+		fmt.Println("Error  NewSqlStorage(): ", err)
+	}
 
 	return &SQLStorage{
 		StorageURL: db,

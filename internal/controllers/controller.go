@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"github.com/voroninsa/go-url-shortener/configs"
 	"github.com/voroninsa/go-url-shortener/internal/common"
 	"github.com/voroninsa/go-url-shortener/internal/storage"
 	"github.com/voroninsa/go-url-shortener/internal/storage/base"
@@ -43,7 +44,6 @@ func (u *UrlController) CreateShortUrl() (string, error) {
 	decoder.DisallowUnknownFields()
 
 	err := decoder.Decode(&decoded_url)
-
 	if err != nil {
 		return "", fmt.Errorf("JSON Decode error: %s", err)
 	}
@@ -51,17 +51,15 @@ func (u *UrlController) CreateShortUrl() (string, error) {
 	short_url := common.EncodeString(decoded_url.Url)
 
 	err = u.storageDriver.PutUrl(short_url, decoded_url.Url)
-
 	if err != nil {
-		return "", fmt.Errorf("Creating Short URL error: %s", err)
+		return "", fmt.Errorf("creating Short URL error: %s", err)
 	}
 	return short_url, nil
 }
 
 func InstantiateController(r *http.Request) IUrlController {
-	fmt.Println("config: ", common.CFG)
-	st := common.CFG.StorageType
-
+	fmt.Println("config: ", configs.CFG)
+	st := configs.CFG.StorageType
 	storage := storage.NewStorage(st)
 
 	return &UrlController{

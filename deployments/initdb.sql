@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS urls (
+    short_url VARCHAR (10) PRIMARY KEY,
+    url VARCHAR(2048) NOT NULL
+);
