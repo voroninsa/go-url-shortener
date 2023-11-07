@@ -7,6 +7,7 @@ docker-compose up --build
 ```
 
 Сервис бежит на tcp порту 8080, работает по HTTP
+
 Эндпоинты:
 - `/shorten-url` - поддерживает _POST_, _Content-Type: application/json_.
   _body: {«url»: string}_.
